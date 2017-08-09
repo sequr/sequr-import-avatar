@@ -136,7 +136,12 @@ setp_one(container)
 
 	}).catch(function(error) {
 
-		console.log(error);
+
+		term("\n");
+		term("\n");
+		term.red(error);
+		term("\n");
+		term("\n");
 
 		process.exit();
 
