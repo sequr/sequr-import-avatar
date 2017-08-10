@@ -50,7 +50,10 @@ module.exports = function(container) {
 				//
 				//	1.	Extract the name of the property
 				//
-				let name = data.property.name;
+				let name = {
+					name: data.property.name,
+					id: data.property.id
+				}
 
 				//
 				//	2.	Add the name to the array

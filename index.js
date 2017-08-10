@@ -5,11 +5,10 @@ let term = require('terminal-kit').terminal;
 let program = require('commander');
 let request = require('request');
 let get_properties = require(process.cwd() + '/sequr/get_properties');
+let get_users = require(process.cwd() + '/sequr/get_users');
 
 let bamboohq = require(process.cwd() + '/bamboohq/index');
 let pingboard = require(process.cwd() + '/pingboard/index');
-
-let key = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVBJX1RPS0VOIiwiaWF0IjoxNDk2NDM5NTIyfQ.jVBs1UwNupxoSgrqgz1CGau2pU2cEX1_1Bw8XIbIWxcIaTEOEyq0JILzFiFP3AixY2MVvQF_uckm5o7kFuGsjw";
 
 //
 //	The CLI options for this app
@@ -88,6 +87,13 @@ setp_one(container)
 		//
 		//
 		//
+		return get_users(container);
+
+	}).then(function(container) {
+
+		//
+		//
+		//
 		return which_service_should_we_use(container);
 
 	}).then(function(container) {
@@ -136,10 +142,9 @@ setp_one(container)
 
 	}).catch(function(error) {
 
-
 		term("\n");
 		term("\n");
-		term.red(error);
+		console.log(error)
 		term("\n");
 		term("\n");
 
@@ -252,7 +257,7 @@ function prepare_the_property_array(container)
 			//
 			//	2.	Construct the option name
 			//
-			let entry = nr + ". " + data
+			let entry = nr + ". " + data.name
 
 			//
 			//	3.	Add the constructed option to the array to then be
@@ -293,15 +298,19 @@ function select_property(container)
 		term.yellow("\tSelect The Property ");
 
 		term('\n');
+
 		term.singleColumnMenu(container.items, options, function(error, response) {
 
 			//
 			//	1.	Get the folder name based on the user selection
 			//
-			let seelcted_folder = container.properties[response.selectedIndex]
+			let selected_property = container.properties[response.selectedIndex]
 
 			term('\n');
-			term.brightCyan("\t"+seelcted_folder);
+
+			term.brightCyan("\t"+selected_property.name);
+
+			container.selected_property = selected_property;
 
 			return resolve(container);
 
@@ -325,7 +334,7 @@ function which_service_should_we_use(container)
 
 		let services = [
 			'BambooHQ',
-			'Pingboard'
+			'pingboard'
 		]
 
 		term('\n');
