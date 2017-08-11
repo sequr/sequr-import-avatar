@@ -129,6 +129,8 @@ function extract_just_the_email(container)
 
 		});
 
+		delete container.raw_users;
+
 		//
 		//
 		//

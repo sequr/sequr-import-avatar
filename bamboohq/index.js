@@ -130,6 +130,8 @@ function convert_xml_to_json(container)
 			//
 			container.employee_json = employee_json;
 
+			delete container.employee_xml;
+
 			//
 			//
 			//
