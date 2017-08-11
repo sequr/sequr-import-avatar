@@ -2,10 +2,11 @@
 
 let npm = require('./package.json');
 let term = require('terminal-kit').terminal;
+let upload = require(process.cwd() + '/sequr/upload');
 let program = require('commander');
 let request = require('request');
-let get_properties = require(process.cwd() + '/sequr/get_properties');
 let get_users = require(process.cwd() + '/sequr/get_users');
+let get_properties = require(process.cwd() + '/sequr/get_properties');
 
 let bamboohq = require(process.cwd() + '/bamboohq/index');
 let pingboard = require(process.cwd() + '/pingboard/index');
@@ -119,6 +120,13 @@ setp_one(container)
 			//
 			return pingboard(container);
 		}
+
+	}).then(function(container) {
+
+		//
+		//
+		//
+		return upload(container);
 
 	}).then(function(container) {
 
