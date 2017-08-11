@@ -1,4 +1,5 @@
 let term = require('terminal-kit').terminal;
+let https = require('https');
 let request = require('request');
 
 module.exports = function(container) {
@@ -60,7 +61,10 @@ function match_accounts(container)
 
 		});
 
-		console.log(matched)
+		//
+		//
+		//
+		container.matched = matched;
 
 		//
 		//	-> Move to the next chain
@@ -77,11 +81,108 @@ function upload(container)
 {
 	return new Promise(function(resolve, reject) {
 
-				//
-		//	-> Move to the next chain
 		//
-		return resolve(container);
+		//
+		//
+		container.matched.forEach(function(data) {
 
+			//
+			//
+			//
+			download(data.photo, function(photo) {
+
+				//
+				//	2.	Prepare the request
+				//
+				let option = {
+					url: "https://api.sequr.io/v1/property_user/" + container.selected_property.id + "/avatar",
+					json: true,
+					headers: {
+						Authorization: "Bearer " + container.sequr_api_key
+					},
+					formData: {
+						avatar: {
+							value: photo,
+							options: {
+								filename: 'name.jpg'
+							}
+						}
+					}
+				}
+
+				//
+				//  3.	Make the request to get all the user properties
+				//
+				request.put(option, function(error, response, body) {
+
+					//
+					//	1.	Check if there were no internal errors
+					//
+					if(error)
+					{
+						console.log(error);
+					}
+
+					//
+					//	2. Check if the server didn't have any issues
+					//
+					if(response.statusCode >= 300)
+					{
+						console.log(body.message);
+					}
+
+					console.log(body)
+
+					//
+					//	-> Move to the next chain
+					//
+					return resolve(container);
+
+				});
+
+			});
+
+		});
 
 	});
+}
+
+function download(url, callback)
+{
+		//
+		//	1.	The tmp file where to save the repo so we can modify
+		//		the content of the archive.
+		//
+		let file = [];
+
+		//
+		//	2.	Download the file.
+		//
+		https.get(url, function(res) {
+
+			//
+			//	1.	Keep on writing to the open file in the TMP dir.
+			//
+			res.on('data', function(data) {
+
+				//
+				//	1.	Write data in to the file.
+				//
+				file.push(data);
+
+
+			});
+
+			//
+			//	2.	Close the file and on once the file is 100% downloaded.
+			//
+			res.on('end', function() {
+
+				let buffer = Buffer.concat(file);
+
+				callback(buffer);
+
+			});
+
+		});
 }
