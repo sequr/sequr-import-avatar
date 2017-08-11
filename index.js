@@ -101,13 +101,6 @@ setp_one(container)
 		//
 		//
 		//
-		return ask_for_the_servie_api_key(container);
-
-	}).then(function(container) {
-
-		//
-		//
-		//
 		if(container.selected_service === "BambooHQ")
 		{
 			//
@@ -131,7 +124,7 @@ setp_one(container)
 
 		term("\n");
 
-		term(container.where_was_i)
+		term("Done!")
 
 		term("\n");
 
@@ -334,7 +327,7 @@ function which_service_should_we_use(container)
 
 		let services = [
 			'BambooHQ',
-			'pingboard'
+			'Pingboard'
 		]
 
 		term('\n');
