@@ -125,7 +125,10 @@ function extract_just_the_email(container)
 		//
 		container.raw_users.forEach(function(data) {
 
-			tmp_users.push(data.user.email);
+			tmp_users.push({
+				id: data.id,
+				email: data.user.email
+			});
 
 		});
 
