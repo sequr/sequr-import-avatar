@@ -6,31 +6,49 @@ module.exports = function(container) {
 	return new Promise(function(resolve, reject) {
 
 		//
-		//
+		//	1.	Prompt for the user name which in this case is the email
 		//
 		ask_for_username(container)
 			.then(function(container) {
 
+				//
+				//	1.	Just the password
+				//
 				return ask_for_password(container)
 
 			}).then(function(container) {
 
+				//
+				//	1.	Make a query to pinboard to get a Access Token
+				//
 				return get_the_api_key(container)
 
 			}).then(function(container) {
 
+				//
+				//	1.	Query for all the user of the company
+				//
 				return get_the_users(container)
 
 			}).then(function(container) {
 
+				//
+				//	1.	Keep only the data from the response that we need
+				//
 				return discard_unnecesary_data(container)
 
 			}).then(function(container) {
 
+				//
+				//	->	Move to the next chain
+				//
 				return resolve(container)
 
 			}).catch(function(error) {
 
+				//
+				//	->	Stop on error
+				//
 				return reject(container)
 
 			});
@@ -47,7 +65,7 @@ module.exports = function(container) {
 //
 
 //
-//	Ask the user for the URL of the site.
+//	Prompt for the user which is the email
 //
 function ask_for_username(container)
 {
@@ -79,7 +97,7 @@ function ask_for_username(container)
 }
 
 //
-//	Ask the user for the URL of the site.
+//	Prompt for the password
 //
 function ask_for_password(container)
 {
@@ -112,12 +130,19 @@ function ask_for_password(container)
 	});
 }
 
+//
+//	After we have the user name and password we can make a query to Pinboard to
+//	ask for a temporary Access Token. Sadly this is the only way to get
+//	access to a company account - Pinboard doesn't support API Keys
+//
+//	So this is the only way as of now.
+//
 function get_the_api_key(container)
 {
 	return new Promise(function(resolve, reject) {
 
 		//
-		//	1.
+		//	1.	Prepare the options for the request
 		//
 		let option = {
 			url: "https://app.pingboard.com/oauth/token?grant_type=password",
@@ -125,27 +150,33 @@ function get_the_api_key(container)
 		}
 
 		//
-		//  2.	Make a request to the Auth server to validate the token
+		//  2.	Make the request
 		//
 		request.post(option, function(error, response, body) {
 
+			//
+			//	1.	Check if there was an internal error
+			//
 			if(error)
 			{
 				return reject(error)
 			}
 
+			//
+			//	2.	Check if we got a negative response
+			//
 			if(response.statusCode >= 300)
 			{
 				return reject(new Error(response.statusCode));
 			}
 
 			//
-			//
+			//	3.	Save the Access Token for the next chain
 			//
 			container.service_api_key = body.access_token
 
 			//
-			//
+			//	->	Move to the next chain
 			//
 			return resolve(container);
 
@@ -157,6 +188,9 @@ function get_the_api_key(container)
 	});
 }
 
+//
+//	Query for all the users of a given company
+//
 function get_the_users(container)
 {
 	return new Promise(function(resolve, reject) {
@@ -185,27 +219,33 @@ function get_the_users(container)
 		}
 
 		//
-		//  3.	Make a request to the Auth server to validate the token
+		//  3.	Make the request
 		//
 		request.get(option, function(error, response, data) {
 
+			//
+			//	1.	Check if there was an internal error
+			//
 			if(error)
 			{
 				return reject(error)
 			}
 
+			//
+			//	2.	Check if we got a negative response
+			//
 			if(response.statusCode >= 300)
 			{
 				return reject(new Error(response.statusCode));
 			}
 
 			//
-			//
+			//	3.	Save all the users for the next chain
 			//
 			container.employee = data.users;
 
 			//
-			//
+			//	->	Move to the next chain
 			//
 			return resolve(container);
 
@@ -215,7 +255,11 @@ function get_the_users(container)
 }
 
 //
-//	Keep only the data that we care about
+//	Go over the result that we got back, and keep only the data that we
+//	actually need, which in this case is the:
+//
+//	- email
+//	- photo
 //
 function discard_unnecesary_data(container)
 {
@@ -227,8 +271,7 @@ function discard_unnecesary_data(container)
 		let tmp_array = [];
 
 		//
-		//	2.	Loop over the result and traverse the convoluted JSON that we
-		//		got back
+		//	2.	Loop over the result and traverse the JSON that we got back
 		//
 		container.employee.forEach(function(data) {
 

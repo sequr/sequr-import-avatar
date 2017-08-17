@@ -220,12 +220,12 @@ function download_image(url, callback)
 		//
 		//	1.	Keep on writing to the open file in the TMP dir.
 		//
-		res.on('data', function(data) {
+		res.on('data', function(buffer) {
 
 			//
 			//	1.	Write data in to the file.
 			//
-			file.push(data);
+			file.push(buffer);
 
 		});
 
