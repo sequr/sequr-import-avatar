@@ -1,5 +1,4 @@
 let term = require('terminal-kit').terminal;
-let xml2js = require('xml2js').parseString;
 let request = require('request');
 
 module.exports = function(container) {
@@ -16,13 +15,6 @@ module.exports = function(container) {
 				//	1.	Get the company user database
 				//
 				return get_company_users(container)
-
-			}).then(function(container) {
-
-				//
-				//	1.	Yes... convert XML to JSON - no joke
-				//
-				return convert_xml_to_json(container)
 
 			}).then(function(container) {
 
@@ -46,7 +38,7 @@ module.exports = function(container) {
 				//
 				//	->	Crash if something goes wrong
 				//
-				return reject(container)
+				return reject(error)
 
 			});
 
@@ -106,19 +98,24 @@ function get_company_users(container)
 		//
 		let option = {
 			url: "https://api.bamboohr.com/api/gateway.php/sequr/v1/employees/directory",
+			json: true,
+			headers: {
+				Accept: 'application/json'
+			}
+
 		}
 
 		//
 		//  2.	Make a request
 		//
-		request.get(option, function(error, response, body) {
+		request.get(option, function(r_error, response, body) {
 
 			//
 			//	1.	Check if there were no internal errors
 			//
-			if(error)
+			if(r_error)
 			{
-				console.log(error);
+				return reject(r_error);
 			}
 
 			//
@@ -126,13 +123,18 @@ function get_company_users(container)
 			//
 			if(response.statusCode >= 300)
 			{
-				console.log(body.message);
+				let message = "BambooHR request failed with status code: "
+							  + response.statusCode
+
+				let error = new Error(message);
+
+				return reject(error);
 			}
 
 			//
 			//	3.	Save the raw body which is just pure XML - deal with it.
 			//
-			container.employee_xml = body;
+			container.employee_json = body;
 
 			//
 			//	->	Move to the next chain
@@ -140,53 +142,6 @@ function get_company_users(container)
 			return resolve(container);
 
 		}).auth(container.service_api_key, 'x', true)
-
-	});
-}
-
-//
-//	There is no good way to do this and no good module to do this because
-//	well XML can be formated in 100 different ways. So to write a parser
-//	that would take in consideration every possibility is... well a daunting
-//	task.
-//
-//	xml2js is not perfect, but at least you get something that can be used.
-//
-function convert_xml_to_json(container)
-{
-	return new Promise(function(resolve, reject) {
-
-		//
-		//	1.	Parse the XML in to JSON
-		//
-		xml2js(container.employee_xml, function(error, employee_json) {
-
-			//
-			//	1. Check for internal errors
-			//
-			if(error)
-			{
-				return reject(error);
-			}
-
-			//
-			//	2.	Save the converted data
-			//
-			container.employee_json = employee_json;
-
-			//
-			//	3.	Delete the XML data since we won't need it anymore to
-			//		be mindful of the user memory since, this array could hold
-			//		a bunch of megabytes
-			//
-			delete container.employee_xml;
-
-			//
-			//	->	Move to the next chain
-			//
-			return resolve(container);
-
-		});
 
 	});
 }

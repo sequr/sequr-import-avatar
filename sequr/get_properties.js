@@ -33,7 +33,10 @@ module.exports = function(container) {
 			//
 			if(response.statusCode >= 300)
 			{
-				return reject(new Error(body.message))
+				let message = "Sequr request failed with message: "
+							  + body.message;
+
+				return reject(new Error(message));
 			}
 
 			//

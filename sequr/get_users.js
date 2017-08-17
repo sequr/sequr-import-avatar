@@ -5,34 +5,33 @@ module.exports = function(container) {
 	return new Promise(function(resolve, reject) {
 
 		//
-		//
+		//	Query Sequr to get all the user for the selected Property
 		//
 		get_all_the_users(container)
 			.then(function(container) {
 
 				//
-				//
+				//	Extract from the response only what we need
 				//
 				return extract_just_the_email(container)
 
 			}).then(function(container) {
 
 				//
-				//
+				//	->	Move to the next chain
 				//
 				return resolve(container);
 
 			}).catch(function(error) {
 
 				//
-				//
+				//	->	Stop on error
 				//
 				return reject(error);
 
 			})
 
 	});
-
 
 };
 
@@ -45,17 +44,17 @@ module.exports = function(container) {
 //
 
 //
-//
+//	Get all the user from the selected property
 //
 function get_all_the_users(container)
 {
 	return new Promise(function(resolve, reject) {
 
 		//
-		//	1.
+		//	1.	Options for the URL
 		//
 		let queries = {
-			page_size: "100",
+			page_size: "1000",
 			page: "1",
 			order_by: "user_name"
 		}
@@ -73,16 +72,17 @@ function get_all_the_users(container)
 		}
 
 		//
-		//  3.	Make the request to get all the user properties
+		//  3.	Make the request to get all the user from the selected
+		//  	properties.
 		//
-		request.get(option, function(error, response, body) {
+		request.get(option, function(r_error, response, body) {
 
 			//
 			//	1.	Check if there were no internal errors
 			//
-			if(error)
+			if(r_error)
 			{
-				return reject(error)
+				return reject(r_error);
 			}
 
 			//
@@ -90,11 +90,14 @@ function get_all_the_users(container)
 			//
 			if(response.statusCode >= 300)
 			{
-				return reject(new Error(body.message))
+				let message = "Sequr request failed with message: "
+							  + body.message;
+
+				return reject(new Error(message));
 			}
 
 			//
-			//	5.	Save the properties for other promises to use
+			//	3.	Save the response before cleaning out what we need
 			//
 			container.raw_users = body.data;
 
@@ -109,22 +112,27 @@ function get_all_the_users(container)
 }
 
 //
-//
+//	From the response we actually need only the emails to then use to match
+//	with the emails and user IDs from a selected Service
 //
 function extract_just_the_email(container)
 {
 	return new Promise(function(resolve, reject) {
 
 		//
-		//
+		//	1.	An array where to put the emails in
 		//
 		let tmp_users = [];
 
 		//
-		//
+		//	2.	Go over the response and get the emails and IDs
 		//
 		container.raw_users.forEach(function(data) {
 
+			//
+			//	1.	Push a small object with just what we need to our
+			//		temporary array
+			//
 			tmp_users.push({
 				id: data.id,
 				email: data.user.email
@@ -132,29 +140,24 @@ function extract_just_the_email(container)
 
 		});
 
+		//
+		//	3.	Remove from memory the response that we got from Sequr since
+		//		there is a lot of unnecessary data there.
+		//
+		//			Be mindful of users computers
+		//
 		delete container.raw_users;
 
 		//
-		//
+		//	4.	Add our tiny data to the container so other promises
+		//		can then use the.
 		//
 		container.sequr_users_email = tmp_users;
 
 		//
-		//
+		//	->	Move to the next chain
 		//
 		return resolve(container);
 
 	});
 }
-
-
-
-
-
-
-
-
-
-
-
-

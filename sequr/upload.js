@@ -210,7 +210,7 @@ function download_image(url, callback)
 	//	1.	The tmp file where to save the repo so we can modify
 	//		the content of the archive.
 	//
-	let file = [];
+	let buffers_chunks = [];
 
 	//
 	//	2.	Download the file.
@@ -225,7 +225,7 @@ function download_image(url, callback)
 			//
 			//	1.	Write data in to the file.
 			//
-			file.push(buffer);
+			buffers_chunks.push(buffer);
 
 		});
 
@@ -239,12 +239,12 @@ function download_image(url, callback)
 			//		server in to one big buffer which is going to represent
 			//		the whole file.
 			//
-			let buffer = Buffer.concat(file);
+			let file = Buffer.concat(buffers_chunks);
 
 			//
 			//	->	Pass the file to whoever is waiting for it.
 			//
-			callback(buffer);
+			callback(file);
 
 		});
 

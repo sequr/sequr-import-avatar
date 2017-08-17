@@ -49,7 +49,7 @@ module.exports = function(container) {
 				//
 				//	->	Stop on error
 				//
-				return reject(container)
+				return reject(error)
 
 			});
 
@@ -167,7 +167,12 @@ function get_the_api_key(container)
 			//
 			if(response.statusCode >= 300)
 			{
-				return reject(new Error(response.statusCode));
+				let message = "Pingboard request failed with status code: "
+							  + response.statusCode
+
+				let error = new Error(message);
+
+				return reject(error);
 			}
 
 			//
@@ -201,7 +206,7 @@ function get_the_users(container)
 		//
 		let queries = {
 			include: "linked_accounts,groups",
-			page_size: "100",
+			page_size: "1000",
 			page: "1",
 			sort: "id"
 		}
