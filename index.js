@@ -279,6 +279,10 @@ function ask_for_sequr_api_key(container)
 		//
 		term.inputField({}, function(error, api_key) {
 
+			term("\n");
+
+			term.yellow("\tLoading...");
+
 			//
 			//	1.	Save the URL
 			//
@@ -366,6 +370,10 @@ function select_property(container)
 		//	3.	Draw the drop down menu
 		//
 		term.singleColumnMenu(container.items, options, function(error, res) {
+
+			term("\n");
+
+			term.yellow("\tLoading...");
 
 			//
 			//	1.	Get the Property name based on the user selection
