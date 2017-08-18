@@ -114,6 +114,20 @@ function start_the_upload_process(container)
 {
 	return new Promise(function(resolve, reject) {
 
+		term.clear();
+
+		term("\n");
+
+		term.yellow("\tSit back and relax.");
+
+		term("\n");
+
+		term.yellow("\tNo more information will be require from you.");
+
+		term("\n");
+
+		term.yellow("\tEnjoy the progress...");
+
 		term("\n");
 		term("\n");
 
@@ -122,7 +136,7 @@ function start_the_upload_process(container)
 		//
 		progress_bar = term.progressBar({
 			width: 80,
-			title: '\tUploading in progress:',
+			title: '\tUploading photos:',
 			percent: true,
 			items: container.matched.length
 		});

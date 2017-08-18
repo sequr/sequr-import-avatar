@@ -178,7 +178,13 @@ display_the_welcome_message(container)
 
 	}).then(function(container) {
 
-				term("\n\n");
+		term.clear();
+
+		term("\n\n");
+
+		term.yellow("\tThe upload process was successful.");
+
+		term("\n\n");
 
 		//
 		//	->	Exit the app
