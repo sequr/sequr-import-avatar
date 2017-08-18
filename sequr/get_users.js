@@ -135,7 +135,8 @@ function extract_just_the_email(container)
 			//
 			tmp_users.push({
 				id: data.id,
-				email: data.user.email
+				email: data.user.email,
+				name: data.user.name
 			});
 
 		});

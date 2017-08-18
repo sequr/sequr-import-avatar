@@ -84,7 +84,8 @@ function match_accounts(container)
 					//
 					matched.push({
 						id: sequr.id,
-						photo: service.photo
+						photo: service.photo,
+						name: sequr.name
 					});
 				}
 
@@ -162,7 +163,7 @@ function upload(container, callback)
 	//
 	let element = container.matched.shift();
 
-	start_progress(element.id)
+	start_progress(element.name)
 
 	//
 	//	1.	Download the avatar from the remote server
@@ -226,7 +227,7 @@ function upload(container, callback)
 				console.log(body.message);
 			}
 
-			next_tick(element.id)
+			next_tick(element.name)
 
 			//
 			//	-> Move to the next chain
