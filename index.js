@@ -178,14 +178,7 @@ display_the_welcome_message(container)
 
 	}).then(function(container) {
 
-		term("\n");
-
-		//
-		//	1.	Let the user know when the app finished working
-		//
-		term.green("\tDone!")
-
-		term("\n");
+				term("\n\n");
 
 		//
 		//	->	Exit the app

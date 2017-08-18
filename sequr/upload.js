@@ -2,6 +2,8 @@ let term = require('terminal-kit').terminal;
 let https = require('https');
 let request = require('request');
 
+let progress_bar = "";
+
 module.exports = function(container) {
 
 	return new Promise(function(resolve, reject) {
@@ -15,7 +17,7 @@ module.exports = function(container) {
 				//
 				//	1.	Upload the avatars for the matching emails
 				//
-				return upload(container)
+				return start_the_upload_process(container)
 
 			}).then(function(container) {
 
@@ -104,88 +106,32 @@ function match_accounts(container)
 }
 
 //
-//	Now that we have all the matched emails we can loop over all of them and
-//	send to the server all the avatars for the selected users
+//	Start the upload process which will wait until all the async work will be
+//	done.
 //
-function upload(container)
+function start_the_upload_process(container)
 {
 	return new Promise(function(resolve, reject) {
 
+		term("\n");
+		term("\n");
+
 		//
-		//	1.	Loop over all the matched emails
 		//
-		container.matched.forEach(function(data) {
+		//
+		progress_bar = term.progressBar({
+			width: 80,
+			title: '\tUploading in progress:',
+			percent: true,
+			items: container.matched.length
+		});
+
+		return upload(container, function() {
 
 			//
-			//	1.	Download the avatar from the remote server
+			//	->	Move to the next chain
 			//
-			download_image(data.photo, function(photo) {
-
-				//
-				//	1.	Create the URL to use to upload the avatar
-				//
-				let url = "https://api.sequr.io/v1/property_user/"
-						  + data.id
-						  + "/avatar"
-
-				//
-				//	2.	Prepare the request where the data is going to be
-				//		sent as a multi part form request so we can attach
-				//		the image.
-				//
-				//		WARNING
-				//
-				//		You are probably wondering why the `filename` is
-				//		present, well. It needs to be there otherwise the
-				//		module will flip out and crash.
-				//
-				//		So, never remove and never change :)
-				//
-				let option = {
-					url: url,
-					json: true,
-					headers: {
-						Authorization: "Bearer " + container.sequr_api_key
-					},
-					formData: {
-						avatar: {
-							value: photo,
-							options: {
-								filename: 'name.jpg'
-							}
-						}
-					}
-				}
-
-				//
-				//  3.	Make the request
-				//
-				request.put(option, function(error, response, body) {
-
-					//
-					//	1.	Check if there were no internal errors
-					//
-					if(error)
-					{
-						console.log(error);
-					}
-
-					//
-					//	2. Check if the server didn't have any issues
-					//
-					if(response.statusCode >= 300)
-					{
-						console.log(body.message);
-					}
-
-					//
-					//	-> Move to the next chain
-					//
-					return resolve(container);
-
-				});
-
-			});
+			return resolve(container);
 
 		});
 
@@ -199,6 +145,99 @@ function upload(container)
 // | |  | | | |____  | |____  | |      | |____  | | \ \   ____) |
 // |_|  |_| |______| |______| |_|      |______| |_|  \_\ |_____/
 //
+
+//
+//	Now that we have all the matched emails we can loop over all of them and
+//	send to the server all the avatars for the selected users
+//
+function upload(container, callback)
+{
+	if(!container.matched.length)
+	{
+		return callback();
+	}
+
+	//
+	//
+	//
+	let element = container.matched.shift();
+
+	start_progress(element.id)
+
+	//
+	//	1.	Download the avatar from the remote server
+	//
+	download_image(element.photo, function(photo) {
+
+		//
+		//	1.	Create the URL to use to upload the avatar
+		//
+		let url = "https://api.sequr.io/v1/property_user/"
+				  + element.id
+				  + "/avatar"
+
+		//
+		//	2.	Prepare the request where the data is going to be
+		//		sent as a multi part form request so we can attach
+		//		the image.
+		//
+		//		WARNING
+		//
+		//		You are probably wondering why the `filename` is
+		//		present, well. It needs to be there otherwise the
+		//		module will flip out and crash.
+		//
+		//		So, never remove and never change :)
+		//
+		let option = {
+			url: url,
+			json: true,
+			headers: {
+				Authorization: "Bearer " + container.sequr_api_key
+			},
+			formData: {
+				avatar: {
+					value: photo,
+					options: {
+						filename: 'name.jpg'
+					}
+				}
+			}
+		}
+
+		//
+		//  3.	Make the request
+		//
+		request.put(option, function(error, response, body) {
+
+			//
+			//	1.	Check if there were no internal errors
+			//
+			if(error)
+			{
+				console.log(error);
+			}
+
+			//
+			//	2. Check if the server didn't have any issues
+			//
+			if(response.statusCode >= 300)
+			{
+				console.log(body.message);
+			}
+
+			next_tick(element.id)
+
+			//
+			//	-> Move to the next chain
+			//
+			return upload(container, callback);
+
+		});
+
+	});
+
+}
 
 //
 //	This function allows you to download a remote file and store it in memory
@@ -249,4 +288,21 @@ function download_image(url, callback)
 		});
 
 	});
+}
+
+
+
+
+function start_progress(task)
+{
+
+
+
+
+	progress_bar.startItem(task);
+}
+
+function next_tick(task)
+{
+	progress_bar.itemDone(task);
 }
