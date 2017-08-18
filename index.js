@@ -182,6 +182,9 @@ display_the_welcome_message(container)
 
 		term("\n\n");
 
+		//
+		//	1.	Let the user know that all went well :)
+		//
 		term.yellow("\tThe upload process was successful.");
 
 		term("\n\n");

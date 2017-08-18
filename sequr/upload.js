@@ -114,25 +114,35 @@ function start_the_upload_process(container)
 {
 	return new Promise(function(resolve, reject) {
 
+		//
+		//	1.	Display a nice banner letting the user know what to expect
+		//		during this step since this part will take quite a
+		//		while depending on:
+		//
+		//		- Internet speed.
+		//		- Image resolution.
+		//		- Amount of images.
+		//
 		term.clear();
 
 		term("\n");
 
-		term.yellow("\tSit back and relax.");
+		term.brightWhite("\tSit back and relax.");
 
 		term("\n");
 
-		term.yellow("\tNo more information will be require from you.");
+		term.brightWhite("\tNo more information will be require from you.");
 
 		term("\n");
 
-		term.yellow("\tEnjoy the progress...");
+		term.brightWhite("\tEnjoy the progress...");
 
 		term("\n");
 		term("\n");
 
 		//
-		//
+		//	2.	Create the Progress Bar here because at this point will know
+		//		how many users do we have to process.
 		//
 		progress_bar = term.progressBar({
 			width: 80,
@@ -141,6 +151,9 @@ function start_the_upload_process(container)
 			items: container.matched.length
 		});
 
+		//
+		//	3.	Once we know which users match, we can start the upload process
+		//
 		return upload(container, function() {
 
 			//
@@ -162,25 +175,37 @@ function start_the_upload_process(container)
 //
 
 //
-//	Now that we have all the matched emails we can loop over all of them and
-//	send to the server all the avatars for the selected users
+//	This is a recurring function which is used to upload photos in a way that
+//	will make the promise wait for the execution. Meaning we can loop with
+//	promises over a regular array. And still keep track of the progress
+//	of this operation, which is crucial to show a nice progress bar to
+//	the user.
 //
 function upload(container, callback)
 {
+	//
+	//	1.	Detect when there are no more user to process. If this is the
+	//		case we exit the loop and go back to the original promise that
+	//		called this function
+	//
 	if(!container.matched.length)
 	{
 		return callback();
 	}
 
 	//
-	//
+	//	2.	Get and remove one element from the array
 	//
 	let element = container.matched.shift();
 
-	start_progress(element.name)
+	//
+	//	3.	Tell the progress bar to start and display the name of the
+	//		user that is being processed.
+	//
+	progress_bar.startItem(element.name);
 
 	//
-	//	1.	Download the avatar from the remote server
+	//	4.	Download the avatar from the remote server
 	//
 	download_image(element.photo, function(photo) {
 
@@ -241,7 +266,12 @@ function upload(container, callback)
 				console.log(body.message);
 			}
 
-			next_tick(element.name)
+			//
+			//	3.	Once we know that the image was successfully uploaded
+			//		we can notify the progress bar to get ready for the next
+			//		tick.
+			//
+			progress_bar.itemDone(element.name);
 
 			//
 			//	-> Move to the next chain
@@ -303,21 +333,4 @@ function download_image(url, callback)
 		});
 
 	});
-}
-
-
-
-
-function start_progress(task)
-{
-
-
-
-
-	progress_bar.startItem(task);
-}
-
-function next_tick(task)
-{
-	progress_bar.itemDone(task);
 }
