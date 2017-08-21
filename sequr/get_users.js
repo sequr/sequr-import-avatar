@@ -51,10 +51,23 @@ function get_all_the_users(container)
 	return new Promise(function(resolve, reject) {
 
 		//
+		//
+		//
+		let page_size = 1000;
+
+		//
+		//
+		//
+		if(container.test_run)
+		{
+			page_size = container.test_size;
+		}
+
+		//
 		//	1.	Options for the URL
 		//
 		let queries = {
-			page_size: "1000",
+			page_size: page_size,
 			page: "1",
 			order_by: "user_name"
 		}

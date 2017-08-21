@@ -2,9 +2,10 @@
 
 let npm = require('./package.json');
 let term = require('terminal-kit').terminal;
-let upload = require(process.cwd() + '/sequr/upload');
 let program = require('commander');
 let request = require('request');
+
+let upload = require(process.cwd() + '/sequr/upload');
 let get_properties = require(process.cwd() + '/sequr/get_properties');
 let get_sequr_users = require(process.cwd() + '/sequr/get_users');
 
@@ -23,8 +24,7 @@ let pingboard = require(process.cwd() + '/pingboard/index');
 //	The CLI options for this app
 //
 program
-	.version(npm.version)
-	.option('-d, --david', 'The David');
+	.version(npm.version);
 
 //
 //	Just add an empty line at the end of the help to make the text more clear
@@ -38,14 +38,6 @@ program.on('--help', function() {
 //	Pass the user input to the module
 //
 program.parse(process.argv);
-
-//
-//	Easter egg.
-//
-if(program.david)
-{
-	console.log('The David');
-}
 
 //
 //	Listen for key preses
@@ -95,6 +87,28 @@ let container = {}
 //
 display_the_welcome_message(container)
 	.then(function(container) {
+
+		//
+		//	Ask the user if they want to do a test run first
+		//
+		return ask_if_for_a_test_run(container);
+
+	}).then(function(container) {
+
+		//
+		//	See if they want to do a test run first
+		//
+		if(!container.test_run)
+		{
+			return container;
+		}
+
+		//
+		//	Ask for the size of the test run
+		//
+		return ask_for_test_run_size(container);
+
+	}).then(function(container) {
 
 		//
 		//	Ask the user for the Sequr API Key
@@ -263,11 +277,85 @@ function display_the_welcome_message(container)
 }
 
 //
+//	Ask the user if they want to do a test run first with X users to see
+//	if everything works
+//
+function ask_if_for_a_test_run(container)
+{
+	return new Promise(function(resolve, reject) {
+
+		term("\n");
+
+		term.yellow('\tWould you like to do a test run? [N|y]');
+
+		term("\n");
+
+		//
+		//
+		//
+		let options = {
+			no: ['n', 'ENTER'],
+			yes: ['y']
+		};
+
+		//
+		//
+		//
+		term.yesOrNo(options, function(error, result) {
+
+
+			//
+			//
+			//
+			if(result)
+			{
+				//
+				//
+				//
+				container.test_run = true;
+
+			}
+
+			//
+			//
+			//
+			return resolve(container);
+
+		});
+
+	});
+}
+
+//
+//	Ask the user for the API Key of Sequr
+//
+function ask_for_test_run_size(container)
+{
+	return new Promise(function(resolve, reject) {
+
+		//
+		//	1.	Use an external function to prompt the user for a number
+		//
+		ask_for_test_size(container, function(callback) {
+
+			//
+			//	-> Move to the next chain
+			//
+			return resolve(container);
+
+		})
+
+	});
+}
+
+//
 //	Ask the user for the API Key of Sequr
 //
 function ask_for_sequr_api_key(container)
 {
 	return new Promise(function(resolve, reject) {
+
+		term.clear();
 
 		term("\n");
 
@@ -483,4 +571,65 @@ function make_the_header(container)
 		return resolve(container);
 
 	});
+}
+
+//  _    _   ______   _        _____    ______   _____     _____
+// | |  | | |  ____| | |      |  __ \  |  ____| |  __ \   / ____|
+// | |__| | | |__    | |      | |__) | | |__    | |__) | | (___
+// |  __  | |  __|   | |      |  ___/  |  __|   |  _  /   \___ \
+// | |  | | | |____  | |____  | |      | |____  | | \ \   ____) |
+// |_|  |_| |______| |______| |_|      |______| |_|  \_\ |_____/
+//
+
+//
+//	This function is used to ask the user how many users dose he want to effect
+//	in a test run.
+//
+//	This code needed to be split an a separated function because we want to
+//	validate the user input, so we need to block the progression until
+//	they input a value bigger then 0.
+//
+function ask_for_test_size(container, callback)
+{
+		term.clear();
+
+		term("\n");
+
+		//
+		//	1.	Ask input from the user
+		//
+		term.yellow("\tHow many employees would you like to effect?: ");
+
+		//
+		//	2.	Listen for the user input
+		//
+		term.inputField({}, function(error, raw_test_size) {
+
+			term("\n");
+
+			//
+			//	1.	Convert the user input in to an integer
+			//
+			let test_size = parseInt(raw_test_size);
+
+			//
+			//	2.	Check if what the user entered is bigger then 0
+			//
+			if(isNaN(test_size) || test_size === 0)
+			{
+				return ask_for_test_size(container, callback);
+			}
+
+			//
+			//	3.	Save the URL
+			//
+			container.test_size = test_size;
+
+			//
+			//	-> Move to the next chain
+			//
+			callback(container);
+
+		});
+
 }

@@ -205,7 +205,7 @@ function get_the_users(container)
 		//		company
 		//
 		let queries = {
-			include: "linked_accounts,groups",
+			include: "",
 			page_size: "1000",
 			page: "1",
 			sort: "id"
