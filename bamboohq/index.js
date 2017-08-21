@@ -93,8 +93,7 @@ function get_company_users(container)
 	return new Promise(function(resolve, reject) {
 
 		//
-		//	1.	The basic options for the request, since we are getting XML
-		//		no JSON flag is needed ;) we just get a nice txt file of XML.
+		//	1.	The basic options for the request.
 		//
 		let option = {
 			url: "https://api.bamboohr.com/api/gateway.php/sequr/v1/employees/directory",
