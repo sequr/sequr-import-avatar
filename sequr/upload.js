@@ -15,6 +15,13 @@ module.exports = function(container) {
 			.then(function(container) {
 
 				//
+				//	1.	Check first if we have a match
+				//
+				return check_if_there_was_any_match(container)
+
+			}).then(function(container) {
+
+				//
 				//	1.	Upload the avatars for the matching emails
 				//
 				return start_the_upload_process(container)
@@ -31,7 +38,7 @@ module.exports = function(container) {
 				//
 				//	->	Crash if something goes wrong
 				//
-				return reject(container)
+				return reject(error)
 
 			});
 
@@ -104,6 +111,31 @@ function match_accounts(container)
 		return resolve(container);
 
 	});
+}
+
+//
+//	Before we start some serious action, lets check if there was at least one
+//	match.
+//
+function check_if_there_was_any_match(container)
+{
+	return new Promise(function(resolve, reject) {
+
+		if(container.matched.length == 0)
+		{
+			//
+			//	-> Stop the app and show the error
+			//
+			return reject(new Error("Sorry, no matches found"));
+		}
+
+		//
+		//	-> Move to the next chain
+		//
+		return resolve(container);
+
+	});
+
 }
 
 //

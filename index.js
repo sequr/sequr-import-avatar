@@ -210,6 +210,8 @@ display_the_welcome_message(container)
 
 	}).catch(function(error) {
 
+		term.clear();
+
 		term("\n\n");
 
 		//
