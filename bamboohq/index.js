@@ -133,7 +133,7 @@ function get_company_users(container)
 			//
 			//	3.	Save the raw body which is just pure XML - deal with it.
 			//
-			container.employee_json = body;
+			container.employees = body.employees;
 
 			//
 			//	->	Move to the next chain
@@ -161,18 +161,14 @@ function discard_unnecesary_data(container)
 		//	2.	Loop over the result and traverse the convoluted JSON that we
 		//		got back
 		//
-		container.employee_json.directory.employees.forEach(function(data) {
+		container.employees.forEach(function(data) {
 
-			data.employee.forEach(function(something, index) {
-
-				//
-				//	1.	Add what we care to the tmp array
-				//
-				tmp_array.push({
-					email: something.field[8]["_"],
-					photo: something.field[14]["_"]
-				})
-
+			//
+			//	1.	Add what we care to the tmp array
+			//
+			tmp_array.push({
+				email: data.workEmail,
+				photo: data.photoUrl
 			});
 
 		});
@@ -187,7 +183,7 @@ function discard_unnecesary_data(container)
 		//		be mindful of the user memory since, this array could hold
 		//		a bunch of megabytes
 		//
-		delete container.employee_json;
+		delete container.employees;
 
 		//
 		//	-> Move to the next chain
