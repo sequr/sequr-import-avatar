@@ -9,7 +9,7 @@ let upload = require(process.cwd() + '/sequr/upload');
 let get_properties = require(process.cwd() + '/sequr/get_properties');
 let get_sequr_users = require(process.cwd() + '/sequr/get_users');
 
-let bamboohq = require(process.cwd() + '/bamboohq/index');
+let bamboohr = require(process.cwd() + '/bamboohr/index');
 let pingboard = require(process.cwd() + '/pingboard/index');
 
 //   _____   ______   _______   _______   _____   _   _    _____    _____
@@ -164,12 +164,12 @@ display_the_welcome_message(container)
 		//
 		//	Load the BambooHR promises
 		//
-		if(container.selected_service === "BambooHQ")
+		if(container.selected_service === "BambooHR")
 		{
 			//
 			//	->	Use this Promises
 			//
-			return bamboohq(container);
+			return bamboohr(container);
 		}
 
 		//
@@ -258,7 +258,7 @@ function display_the_welcome_message(container)
 		//
 		//	2.	The text to be displayed on the screen
 		//
-		let text = "\tStarting Sequr Importer";
+		let text = "\tStarting Sequr Import";
 
 		//
 		//	3.	Draw the text
@@ -364,7 +364,7 @@ function ask_for_sequr_api_key(container)
 		//
 		//	1.	Ask input from the user
 		//
-		term.yellow("\tPlease past the Sequr API Key: ");
+		term.yellow("\tPlease paste your Sequr API Key: ");
 
 		//
 		//	2.	Listen for the user input
@@ -511,7 +511,7 @@ function which_service_should_we_use(container)
 		//	2.	This are the services that we support at this moment
 		//
 		let services = [
-			'BambooHQ',
+			'BambooHR',
 			'Pingboard'
 		]
 

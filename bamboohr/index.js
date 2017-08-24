@@ -63,7 +63,7 @@ function ask_for_the_api_key(container)
 		//
 		//	1.	Ask input from the user
 		//
-		term.yellow("\tPlease enter your Bamboo API Key: ");
+		term.yellow("\tPlease enter your BambooHR API Key: ");
 
 		//
 		//	2.	Process the user input
