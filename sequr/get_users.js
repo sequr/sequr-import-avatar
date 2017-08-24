@@ -63,7 +63,7 @@ function get_all_the_users(container)
 		//	2.	Prepare the request
 		//
 		let option = {
-			url: "https://users-api.sequr.io/v1/property/" + container.selected_property.id + "/property_user",
+			url: "https://api.sequr.io/v1/property/" + container.selected_property.id + "/property_user",
 			json: true,
 			qs: queries,
 			headers: {
