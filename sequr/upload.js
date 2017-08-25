@@ -22,6 +22,13 @@ module.exports = function(container) {
 			}).then(function(container) {
 
 				//
+				//	1.	Slice the array of matched people for a test run
+				//
+				return slice_the_array_if_in_demo_mode(container)
+
+			}).then(function(container) {
+
+				//
 				//	1.	Upload the avatars for the matching emails
 				//
 				return start_the_upload_process(container)
@@ -139,6 +146,52 @@ function check_if_there_was_any_match(container)
 }
 
 //
+//	Before we start some serious action, lets check if there was at least one
+//	match.
+//
+function slice_the_array_if_in_demo_mode(container)
+{
+	return new Promise(function(resolve, reject) {
+
+		//
+		//	1.	Check if the user entered a size limit for the amount of
+		//		matched user to process
+		//
+		if(container.test_size)
+		{
+
+			//
+			//	1. Create a temporary array to hold the sliced array
+			//
+			let sliced = [];
+
+			//
+			//	2.	Get the elements from the top
+			//
+			sliced = container.matched.slice(0, container.test_size);
+
+			//
+			//	3.	Remove the rest of the matched user since we don't
+			//		need them anymore
+			//
+			delete container.matched;
+
+			//
+			//	4.	Preserve the sliced
+			//
+			container.matched = sliced;
+		}
+
+		//
+		//	-> Move to the next chain
+		//
+		return resolve(container);
+
+	});
+
+}
+
+//
 //	Start the upload process which will wait until all the async work will be
 //	done.
 //
@@ -180,6 +233,7 @@ function start_the_upload_process(container)
 			width: 80,
 			title: '\tUploading photos:',
 			percent: true,
+			eta: true,
 			items: container.matched.length
 		});
 
@@ -189,9 +243,17 @@ function start_the_upload_process(container)
 		return upload(container, function() {
 
 			//
-			//	->	Move to the next chain
+			//	1.	Set a delay before we resolve the promise to give the
+			//		progress bar time to display the Done message.
 			//
-			return resolve(container);
+			setTimeout(function() {
+
+				//
+				//	->	Move to the next chain
+				//
+				return resolve(container);
+
+			}, 700);
 
 		});
 

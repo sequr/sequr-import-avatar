@@ -201,33 +201,18 @@ function get_the_users(container)
 	return new Promise(function(resolve, reject) {
 
 		//
-		//	1.	By default we want to get as many user as possible. At this
-		//		moment we don't want to deal with pagination
-		//
-		let page_size = 1000;
-
-		//
-		//	2.	If the user chose to run in test mode we overwrite the
-		//		default value with what the user entered
-		//
-		if(container.test_run)
-		{
-			page_size = container.test_size;
-		}
-
-		//
-		//	3.	The basic parameters to get the list of user for the given
+		//	1.	The basic parameters to get the list of user for the given
 		//		company
 		//
 		let queries = {
 			include: "",
-			page_size: page_size,
+			page_size: 1000,
 			page: "1",
 			sort: "id"
 		}
 
 		//
-		//	4.	Prepare the query to get a all the user of a company
+		//	2.	Prepare the query to get a all the user of a company
 		//
 		let option = {
 			url: "https://app.pingboard.com/api/v2/users",
@@ -239,7 +224,7 @@ function get_the_users(container)
 		}
 
 		//
-		//  5.	Make the request
+		//  3.	Make the request
 		//
 		request.get(option, function(error, response, data) {
 
