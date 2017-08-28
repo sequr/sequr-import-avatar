@@ -226,7 +226,12 @@ function start_the_upload_process(container)
 		term("\n");
 
 		//
-		//	2.	Create the Progress Bar here because at this point will know
+		//	2.	Calculate how many account were matched
+		//
+		let matched_size = container.matched.length;
+
+		//
+		//	3.	Create the Progress Bar here because at this point will know
 		//		how many users do we have to process.
 		//
 		progress_bar = term.progressBar({
@@ -234,13 +239,13 @@ function start_the_upload_process(container)
 			title: '\tUploading photos:',
 			percent: true,
 			eta: true,
-			items: container.matched.length
+			items: matched_size
 		});
 
 		//
-		//	3.	Once we know which users match, we can start the upload process
+		//	4.	Once we know which users match, we can start the upload process
 		//
-		return upload(container, function() {
+		return upload(container, matched_size, function() {
 
 			//
 			//	1.	Set a delay before we resolve the promise to give the
@@ -275,31 +280,36 @@ function start_the_upload_process(container)
 //	of this operation, which is crucial to show a nice progress bar to
 //	the user.
 //
-function upload(container, callback)
+function upload(container, length, callback)
 {
 	//
 	//	1.	Detect when there are no more user to process. If this is the
 	//		case we exit the loop and go back to the original promise that
 	//		called this function
 	//
-	if(!container.matched.length)
+	if(!length)
 	{
 		return callback();
 	}
 
 	//
-	//	2.	Get and remove one element from the array
+	//	2.	Decrees the amount of accounts to process
 	//
-	let element = container.matched.shift();
+	length--;
 
 	//
-	//	3.	Tell the progress bar to start and display the name of the
+	//	3.	Get and remove one element from the array
+	//
+	let element = container.matched[length];
+
+	//
+	//	4.	Tell the progress bar to start and display the name of the
 	//		user that is being processed.
 	//
 	progress_bar.startItem(element.name);
 
 	//
-	//	4.	Download the avatar from the remote server
+	//	5.	Download the avatar from the remote server
 	//
 	download_image(element.photo, function(photo) {
 
@@ -370,7 +380,7 @@ function upload(container, callback)
 			//
 			//	-> Move to the next chain
 			//
-			return upload(container, callback);
+			return upload(container, length, callback);
 
 		});
 

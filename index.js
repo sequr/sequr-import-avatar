@@ -192,16 +192,19 @@ display_the_welcome_message(container)
 
 	}).then(function(container) {
 
-		term.clear();
+		//
+		//	Get the names to display in the summary
+		//
+		return extract_only_matched_names(container);
 
-		term("\n\n");
+	}).then(function(container) {
 
 		//
-		//	1.	Let the user know that all went well :)
+		//	Show a summary of the work done
 		//
-		term.yellow("\tThe upload process was successful.");
+		return display_the_sumary(container);
 
-		term("\n\n");
+	}).then(function(container) {
 
 		//
 		//	->	Exit the app
@@ -293,7 +296,8 @@ function ask_if_for_a_test_run(container)
 		term("\n");
 
 		//
-		//
+		//	1.	Set how the prompt will behave, we want the default
+		//		behavior not to run a test run
 		//
 		let options = {
 			no: ['n', 'ENTER'],
@@ -301,25 +305,27 @@ function ask_if_for_a_test_run(container)
 		};
 
 		//
+		//	2.	Ask the user what to do:
 		//
+		//		- Import all the photos
+		//		- Or just a small part
 		//
 		term.yesOrNo(options, function(error, result) {
 
-
 			//
-			//
+			//	1.	Check if the result was positive
 			//
 			if(result)
 			{
 				//
-				//
+				//	1.	Since the result is positive, we run a test
 				//
 				container.test_run = true;
 
 			}
 
 			//
-			//
+			//	-> Move to the next chain
 			//
 			return resolve(container);
 
@@ -571,6 +577,91 @@ function make_the_header(container)
 		//	-> Move to the next chain
 		//
 		return resolve(container);
+
+	});
+}
+
+//
+//	Extract just the names of the effected users so we can display the names
+//	in a summary
+//
+function extract_only_matched_names(container)
+{
+	return new Promise(function(resolve, reject) {
+
+		//
+		//	1.	Loop over the matched accounts and take out only the
+		//		name of the account since in the array we have the
+		//		name and URL to the photo
+		//
+		let names = container.matched.reduce(function(array, data) {
+
+			//
+			//	1.	Push only the name to the array
+			//
+			array.push(data.name)
+
+			//
+			//	->	Return the new array for the next loop
+			//
+			return array;
+
+		}, []);
+
+		//
+		//	2.	Save the names
+		//
+		container.matched_names = names;
+
+		//
+		//	-> Move to the next chain
+		//
+		return resolve(container);
+
+	});
+}
+
+//
+//	Show a nice summary of the process.
+//
+function display_the_sumary(container)
+{
+	return new Promise(function(resolve, reject) {
+
+		term.clear();
+
+		term("\n\n");
+
+		//
+		//	1.	Let the user know that all went well :)
+		//
+		term.yellow("\tThe upload process was successful.");
+
+		term("\n\n");
+
+		term.yellow("\tSequr users: " + container.sequr_users_email.length);
+
+		term("\n");
+
+		term.yellow("\t" + container.selected_service + " users: " + container.clean_users.length);
+
+		term("\n");
+
+		term.yellow("\tMatched accounts: " + container.matched.length);
+
+		term("\n\n");
+
+		//
+		//	2.	Display the list of names that where effected
+		//
+		term.gridMenu(container.matched_names, function(error, response) {
+
+			//
+			//	-> Move to the next chain
+			//
+			return resolve(container);
+
+		});
 
 	});
 }
