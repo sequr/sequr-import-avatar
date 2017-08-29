@@ -1,0 +1,31 @@
+{
+  "name": "sequr-import-avatar",
+  "version": "1.0.0",
+  "description": "👤 a simple CLI to help you import avatars from different services in too ours",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sequr/sequr-import-avatar"
+  },
+  "bin": {
+    "sequr-avatar": "./index.js"
+  },
+  "keywords": [
+    "cli",
+    "nodejs",
+    "sequr",
+    "avatar",
+    "import"
+  ],
+  "author": {
+    "name": "Sequr",
+    "email": "developer@sequr.io",
+    "url": "https://sequr.io"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "commander": "2.11.0",
+    "request": "2.81.0",
+    "terminal-kit": "1.13.9"
+  }
+}
