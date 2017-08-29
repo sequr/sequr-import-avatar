@@ -1,5 +1,5 @@
 {
-  "name": "sequr-import-avatar",
+  "name": "@sequr/sequr-import-avatar",
   "version": "1.0.0",
   "description": "👤 a simple CLI to help you import avatars from different services in too ours",
   "main": "index.js",
