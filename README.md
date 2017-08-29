@@ -11,8 +11,10 @@
 Since this is a NPM package you'll need to have in your system NodeJS. After that you can just type the following command
 
 ```
-sudo npm install -g sequr-avatar
+sudo npm install -g @sequr/sequr-import-avatar
 ```
+
+Once this part is done, you can run the app by typing: `sequr-avatar`.
 
 # What else do I need
 
