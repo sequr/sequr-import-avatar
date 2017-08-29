@@ -21,7 +21,7 @@ let pingboard = require(process.cwd() + '/pingboard/index');
 //
 
 //
-//	The CLI options for this app
+//	The CLI options for this app. At this moment we just support Version
 //
 program
 	.version(npm.version);
@@ -91,7 +91,7 @@ display_the_welcome_message(container)
 		//
 		//	Ask the user if they want to do a test run first
 		//
-		return ask_if_for_a_test_run(container);
+		return ask_for_a_test_run(container);
 
 	}).then(function(container) {
 
@@ -206,6 +206,8 @@ display_the_welcome_message(container)
 
 	}).then(function(container) {
 
+		term("\n");
+
 		//
 		//	->	Exit the app
 		//
@@ -285,7 +287,7 @@ function display_the_welcome_message(container)
 //	Ask the user if they want to do a test run first with X users to see
 //	if everything works
 //
-function ask_if_for_a_test_run(container)
+function ask_for_a_test_run(container)
 {
 	return new Promise(function(resolve, reject) {
 
@@ -651,10 +653,21 @@ function display_the_sumary(container)
 
 		term("\n\n");
 
+		term.yellow("\tBellow you can find a full list of all the effected accounts: ");
+
 		//
-		//	2.	Display the list of names that where effected
+		//	2.	Specify the position from where the Terminal Kit should start
+		//		drawing the Grid Menu.
 		//
-		term.gridMenu(container.matched_names, function(error, response) {
+		let options = {
+			x: 9,
+			y: 11
+		}
+
+		//
+		//	3.	Display the list of names that where effected
+		//
+		term.gridMenu(container.matched_names, options, function(error, response) {
 
 			//
 			//	-> Move to the next chain

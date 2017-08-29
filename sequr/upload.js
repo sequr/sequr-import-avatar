@@ -318,7 +318,7 @@ function upload(container, length, callback)
 		//
 		let url = "https://api.sequr.io/v1/property_user/"
 				  + element.id
-				  + "/avatar"
+				  + "/avatar";
 
 		//
 		//	2.	Prepare the request where the data is going to be
