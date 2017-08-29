@@ -1,5 +1,9 @@
 # Sequr Importer Avatar
 
+<div align="center">
+	<img src="https://raw.githubusercontent.com/sequr/sequr-import-avatar/master/resources/screen_shot.png">
+</div>
+
 👤 a simple CLI to help you import avatars from different services in to ours
 
 # How to install
