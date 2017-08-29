@@ -5,12 +5,12 @@ let term = require('terminal-kit').terminal;
 let program = require('commander');
 let request = require('request');
 
-let upload = require(process.cwd() + '/sequr/upload');
-let get_properties = require(process.cwd() + '/sequr/get_properties');
-let get_sequr_users = require(process.cwd() + '/sequr/get_users');
+let upload = require('./sequr/upload');
+let get_properties = require('./sequr/get_properties');
+let get_sequr_users = require('./sequr/get_users');
 
-let bamboohr = require(process.cwd() + '/bamboohr/index');
-let pingboard = require(process.cwd() + '/pingboard/index');
+let bamboohr = require('./bamboohr/index');
+let pingboard = require('./pingboard/index');
 
 //   _____   ______   _______   _______   _____   _   _    _____    _____
 //  / ____| |  ____| |__   __| |__   __| |_   _| | \ | |  / ____|  / ____|
