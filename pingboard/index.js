@@ -111,9 +111,17 @@ function ask_for_password(container)
 		term.yellow("\tPlease enter your password: ");
 
 		//
-		//	2.	Process the user input
+		//	2.	Enable password input mode, meaning the character will be
+		//		dotted out.
 		//
-		term.inputField({}, function(error, password) {
+		let options = {
+			echoChar: true
+		}
+
+		//
+		//	3.	Process the user input
+		//
+		term.inputField(options, function(error, password) {
 
 			//
 			//	1.	Save the URL
