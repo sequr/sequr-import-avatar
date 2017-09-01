@@ -1,6 +1,6 @@
 {
   "name": "@sequr/sequr-import-avatar",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "👤 a simple CLI to help you import avatars from different services in too ours",
   "main": "index.js",
   "repository": {
@@ -26,6 +26,6 @@
   "dependencies": {
     "commander": "2.11.0",
     "request": "2.81.0",
-    "terminal-kit": "1.13.9"
+    "terminal-kit": "1.13.10"
   }
 }
