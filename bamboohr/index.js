@@ -108,7 +108,7 @@ function ask_for_the_company_name(container)
 		//
 		//	1.	Ask input from the user
 		//
-		term.yellow("\tPlease enter your company name: ");
+		term.yellow("\tPlease enter BambooHR sub-domain: ");
 
 		//
 		//	2.	Process the user input
