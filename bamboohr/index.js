@@ -12,6 +12,13 @@ module.exports = function(container) {
 			.then(function(container) {
 
 				//
+				//	1.	Ask for the company name
+				//
+				return ask_for_the_company_name(container)
+
+			}).then(function(container) {
+
+				//
 				//	1.	Get the company user database
 				//
 				return get_company_users(container)
@@ -86,6 +93,44 @@ function ask_for_the_api_key(container)
 }
 
 //
+//	Ask the user for the name of the company that they have created on
+//	BambooHR. We have to do this because BambooHR is not inferring the
+//	name of the company based on the API Key alone.
+//
+function ask_for_the_company_name(container)
+{
+	return new Promise(function(resolve, reject) {
+
+		term.clear();
+
+		term("\n");
+
+		//
+		//	1.	Ask input from the user
+		//
+		term.yellow("\tPlease enter BambooHR sub-domain: ");
+
+		//
+		//	2.	Process the user input
+		//
+		term.inputField({}, function(error, company_name) {
+
+			//
+			//	1.	Save the URL
+			//
+			container.company_name = company_name;
+
+			//
+			//	-> Move to the next chain
+			//
+			return resolve(container);
+
+		});
+
+	});
+}
+
+//
 //	Retrieve every employee for a specific account
 //
 function get_company_users(container)
@@ -96,7 +141,7 @@ function get_company_users(container)
 		//	1.	The basic options for the request.
 		//
 		let option = {
-			url: "https://api.bamboohr.com/api/gateway.php/sequr/v1/employees/directory",
+			url: "https://api.bamboohr.com/api/gateway.php/" + container.company_name + "/v1/employees/directory",
 			json: true,
 			headers: {
 				Accept: 'application/json'
