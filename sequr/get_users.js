@@ -133,12 +133,16 @@ function extract_just_the_email(container)
 			//	1.	Push a small object with just what we need to our
 			//		temporary array
 			//
-			tmp_users.push({
-				id: user.id,
-				uuid: user.uuid,
-				email: user.email,
-				name: user.name
-			});
+			if(user.email) {
+
+				tmp_users.push({
+					id: user.id,
+					uuid: user.uuid,
+					email: user.email,
+					name: user.name
+				});
+				
+			}
 
 		});
 
