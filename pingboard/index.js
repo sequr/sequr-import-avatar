@@ -8,7 +8,15 @@ module.exports = function(container) {
 		//
 		//	1.	Prompt for the user name which in this case is the email
 		//
-		ask_for_username(container)
+		display_pingboard_note(container)
+			.then(function(container) {
+
+				//
+				//	1.	Just the password
+				//
+				return ask_for_username(container)
+
+			})		
 			.then(function(container) {
 
 				//
@@ -63,6 +71,31 @@ module.exports = function(container) {
 // | |      | | \ \  | |__| | | |  | |  _| |_   ____) | | |____   ____) |
 // |_|      |_|  \_\  \____/  |_|  |_| |_____| |_____/  |______| |_____/
 //
+
+//
+//	Draw on the screen a message that pingboard only allows two plan TEAM 
+//	and Company for this imports
+//
+function display_pingboard_note(container)
+{
+	return new Promise(function(resolve, reject) {
+
+		term("\n");
+
+		//
+		//	1.	Notice to pingboard users
+		//
+		term.red("\tNOTE: It will only work with Pingboard's TEAM and Company plan.\n");
+
+		term("\n");
+
+		//
+		//	-> Move to the next chain
+		//
+		return resolve(container);
+
+	});
+}
 
 //
 //	Prompt for the user which is the email

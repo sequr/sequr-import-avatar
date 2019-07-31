@@ -520,7 +520,7 @@ function which_service_should_we_use(container)
 		//
 		let services = [
 			'BambooHR',
-			"Pingboard (It will only work with Pingboard's TEAM and Company plan.)"
+			'Pingboard'
 		]
 
 		//
