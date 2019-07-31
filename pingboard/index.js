@@ -214,7 +214,7 @@ function get_the_users(container)
 		//
 		let queries = {
 			include: "",
-			page_size: 1000,
+			page_size: 3000,
 			page: "1",
 			sort: "id"
 		}
