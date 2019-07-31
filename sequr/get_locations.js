@@ -1,4 +1,4 @@
-let request = require('request');
+const request = require('request');
 
 module.exports = function(container) {
 
@@ -7,8 +7,8 @@ module.exports = function(container) {
 		//
 		//	1.	Prepare the request
 		//
-		let option = {
-			url: "https://api.sequr.io/v1/user/me/properties",
+		const option = {
+			url: "https://api.sequr.io/v1/user/me/locations",
 			json: true,
 			headers: {
 				Authorization: "Bearer " + container.sequr_api_key
@@ -16,7 +16,7 @@ module.exports = function(container) {
 		}
 
 		//
-		//  2.	Make the request to get all the user properties
+		//  2.	Make the request to get all the user locations
 		//
 		request.get(option, function(error, response, body) {
 
@@ -40,35 +40,37 @@ module.exports = function(container) {
 			}
 
 			//
-			//	3.	Make an empty array where to store all the user properties
+			//	3.	Make an empty array where to store all the user locations
 			//
-			let properties = [];
+			let locations = [];
 
 			//
-			//	4.	Loop over the result and save all the properties names
+			//	4.	Loop over the result and save all the locations names
 			//		in to the array
 			//
 			body.data.forEach(function(data) {
 
 				//
-				//	1.	Extract the name of the property
+				//	1.	Extract the name of the location
 				//
-				let name = {
-					name: data.property.name,
-					id: data.property.id
+				let location = {
+					name: data.location.name,
+					id: data.location.id,
+					uuid:data.location.uuid,
+					customer_uuid:data.location.customer_uuid
 				}
 
 				//
 				//	2.	Add the name to the array
 				//
-				properties.push(name);
+				locations.push(location);
 
 			});
 
 			//
-			//	5.	Save the properties for other promises to use
+			//	5.	Save the locations for other promises to use
 			//
-			container.properties = properties;
+			container.locations = locations;
 
 			//
 			//	->	Move to the next chain

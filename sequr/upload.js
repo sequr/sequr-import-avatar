@@ -98,6 +98,7 @@ function match_accounts(container)
 					//
 					matched.push({
 						id: sequr.id,
+						uuid: sequr.uuid,
 						photo: service.photo,
 						name: sequr.name
 					});
@@ -316,8 +317,10 @@ function upload(container, length, callback)
 		//
 		//	1.	Create the URL to use to upload the avatar
 		//
-		let url = "https://api.sequr.io/v1/property_user/"
-				  + element.id
+		let url = "https://api.sequr.io/v1/customer/"
+				  + container.selected_location.customer_uuid
+				  + "/user/"
+				  + element.uuid
 				  + "/avatar";
 
 		//
