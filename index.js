@@ -263,7 +263,7 @@ function display_the_welcome_message(container)
 		//
 		//	2.	The text to be displayed on the screen
 		//
-		let text = "\tStarting Sequr Import\n\nNOTE: Only users with email will import.";
+		let text = "\tStarting Sequr Import\n\n\tNOTE: Only users with email will import.";
 
 		//
 		//	3.	Draw the text
@@ -520,7 +520,7 @@ function which_service_should_we_use(container)
 		//
 		let services = [
 			'BambooHR',
-			'Pingboard'
+			"Pingboard (It will only work with Pingboard's TEAM and Company plan.)"
 		]
 
 		//
