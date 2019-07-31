@@ -291,11 +291,15 @@ function discard_unnecesary_data(container)
 			//
 			//	1.	Add what we care to the tmp array
 			//
-			tmp_array.push({
-				email: data.email,
-				photo: data.avatar_urls.original
-			});
+			if(data.email){
 
+				tmp_array.push({
+					email: data.email,
+					photo: data.avatar_urls.original
+				});
+
+			}
+			
 		});
 
 		//

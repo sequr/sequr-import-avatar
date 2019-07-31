@@ -211,11 +211,15 @@ function discard_unnecesary_data(container)
 			//
 			//	1.	Add what we care to the tmp array
 			//
-			tmp_array.push({
-				email: data.workEmail,
-				photo: data.photoUrl
-			});
+			if(data.workEmail){
 
+				tmp_array.push({
+					email: data.workEmail,
+					photo: data.photoUrl
+				});
+
+			}
+			
 		});
 
 		//
