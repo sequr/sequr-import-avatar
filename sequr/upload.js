@@ -87,7 +87,7 @@ function match_accounts(container)
 				//
 				//	1.	Compare the emails
 				//
-				if(sequr.email == service.email)
+				if(service.email && sequr.email && (sequr.email == service.email))
 				{
 					//
 					//	1.	If a match is found we save two important values
