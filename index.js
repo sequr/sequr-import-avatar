@@ -263,7 +263,7 @@ function display_the_welcome_message(container)
 		//
 		//	2.	The text to be displayed on the screen
 		//
-		let text = "\tStarting Sequr Import";
+		let text = "\tStarting Sequr Import\n\nNOTE: Only users with email will import.";
 
 		//
 		//	3.	Draw the text
@@ -641,11 +641,11 @@ function display_the_sumary(container)
 
 		term("\n\n");
 
-		term.yellow("\tSequr users: " + container.sequr_users_email.length);
+		term.yellow("\tSequr users with email : " + container.sequr_users_email.length);
 
 		term("\n");
 
-		term.yellow("\t" + container.selected_service + " users: " + container.clean_users.length);
+		term.yellow("\t" + container.selected_service + " users with email : " + container.clean_users.length);
 
 		term("\n");
 
