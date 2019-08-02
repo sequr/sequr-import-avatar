@@ -1,6 +1,6 @@
 {
   "name": "@sequr/sequr-import-avatar",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "👤 a simple CLI to help you import avatars from different services in too ours",
   "main": "index.js",
   "repository": {
