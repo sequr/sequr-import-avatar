@@ -12,17 +12,17 @@ module.exports = function(container) {
 			.then(function(container) {
 
 				//
-				//	1.	Just the password
+				//	1.	Get client id value from command input
 				//
-				return ask_for_username(container)
+				return ask_for_client_id(container)
 
 			})		
 			.then(function(container) {
 
 				//
-				//	1.	Just the password
+				//	1.	Get client secret value from command input
 				//
-				return ask_for_password(container)
+				return ask_for_client_secret(container)
 
 			}).then(function(container) {
 
@@ -89,6 +89,26 @@ function display_pingboard_note(container)
 
 		term("\n");
 
+		term.bgBlue("\tFollow the instruction to get a client id and client secret\n");
+
+		term("\n");
+
+		term.blue("\tStep-1 Login in pingboard account\n");
+
+		term.blue("\tStep-2 In navigation bar click on admin and select add-ons option\n");
+
+		term.blue("\tStep-3 Click on pingboard api\n");
+
+		term.blue("\tStep-4 Click on manage service account api\n");
+
+		term.blue("\tStep-5 If you have already service account use that credentials\n");
+
+		term.blue("\t       otherwise, create a service account\n");
+
+		term.blue("\tStep-6 From service account take client id and client secret\n");
+
+		term("\n");
+
 		//
 		//	-> Move to the next chain
 		//
@@ -98,26 +118,26 @@ function display_pingboard_note(container)
 }
 
 //
-//	Prompt for the user which is the email
+//	Prompt for the user which is the client id
 //
-function ask_for_username(container)
+function ask_for_client_id(container)
 {
 	return new Promise(function(resolve, reject) {
 
 		//
 		//	1.	Ask input from the user
 		//
-		term.yellow("\tPlease enter your username: ");
+		term.yellow("\tPlease enter your client id: ");
 
 		//
 		//	2.	Process the user input
 		//
-		term.inputField({}, function(error, username) {
+		term.inputField({}, function(error, client_id) {
 
 			//
 			//	1.	Save the URL
 			//
-			container.pingboard_username = username;
+			container.pingboard_client_id = client_id;
 
 			//
 			//	-> Move to the next chain
@@ -130,9 +150,9 @@ function ask_for_username(container)
 }
 
 //
-//	Prompt for the password
+//	Prompt for the client secret
 //
-function ask_for_password(container)
+function ask_for_client_secret(container)
 {
 	return new Promise(function(resolve, reject) {
 
@@ -141,7 +161,7 @@ function ask_for_password(container)
 		//
 		//	1.	Ask input from the user
 		//
-		term.yellow("\tPlease enter your password: ");
+		term.yellow("\tPlease enter your client secret: ");
 
 		//
 		//	2.	Enable password input mode, meaning the character will be
@@ -154,12 +174,12 @@ function ask_for_password(container)
 		//
 		//	3.	Process the user input
 		//
-		term.inputField(options, function(error, password) {
+		term.inputField(options, function(error, client_secret) {
 
 			//
 			//	1.	Save the URL
 			//
-			container.pingboard_password = password;
+			container.pingboard_client_secret = client_secret;
 
 			//
 			//	-> Move to the next chain
@@ -186,7 +206,7 @@ function get_the_api_key(container)
 		//	1.	Prepare the options for the request
 		//
 		let option = {
-			url: "https://app.pingboard.com/oauth/token?grant_type=password",
+			url: "https://app.pingboard.com/oauth/token?grant_type=client_credentials",
 			json: true
 		}
 
@@ -194,7 +214,7 @@ function get_the_api_key(container)
 		//  2.	Make the request
 		//
 		request.post(option, function(error, response, body) {
-
+			
 			//
 			//	1.	Check if there was an internal error
 			//
@@ -227,8 +247,8 @@ function get_the_api_key(container)
 			return resolve(container);
 
 		}).form({
-			username: container.pingboard_username,
-			password: container.pingboard_password
+			client_id: container.pingboard_client_id,
+			client_secret: container.pingboard_client_secret
 		});
 
 	});
@@ -324,7 +344,7 @@ function discard_unnecesary_data(container)
 			//
 			//	1.	Add what we care to the tmp array
 			//
-			if(data.email){
+			if(data.email && data.avatar_urls && data.avatar_urls.original){
 
 				tmp_array.push({
 					email: data.email,
