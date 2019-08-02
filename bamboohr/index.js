@@ -211,7 +211,7 @@ function discard_unnecesary_data(container)
 			//
 			//	1.	Add what we care to the tmp array
 			//
-			if(data.workEmail){
+			if(data.workEmail && data.photoUrl){
 
 				tmp_array.push({
 					email: data.workEmail,
