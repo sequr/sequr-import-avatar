@@ -26,7 +26,16 @@ Similar to Sequr, you can generate an API Key from your dashboard
 
 ## Pingboard
 
-At this point Pingboard doesn't support fixed API Keys. To let our CLI do the work you'll have to provide the user name and password for the admin account.
+Follow the instruction to get a client id and client secret
+
+Step-1 Login in pingboard account<br />
+Step-2 In navigation bar click on admin and select add-ons option<br />
+Step-3 Click on pingboard api<br />
+Step-4 Click on manage service account api<br />
+Step-5 If you have already service account use that credentials otherwise, create a service account<br />
+Step-6 From service account take client id and client secret
+
+![Pingboard steps](image/pingboard_step.gif)
 
 **Important**: All the credentials are stored in RAM, and when the CLI quits all the data will be lost. We don't store any credentials on the hard drive. This means that at every execution you'll have to provide the credentials again.
 

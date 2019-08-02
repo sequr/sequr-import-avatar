@@ -5,7 +5,7 @@ module.exports = function(container) {
 	return new Promise(function(resolve, reject) {
 
 		//
-		//	Query Sequr to get all the user for the selected Property
+		//	Query Sequr to get all the user for the selected Locations
 		//
 		get_all_the_users(container)
 			.then(function(container) {
@@ -44,7 +44,7 @@ module.exports = function(container) {
 //
 
 //
-//	Get all the user from the selected property
+//	Get all the user from the selected Location
 //
 function get_all_the_users(container)
 {
@@ -54,7 +54,7 @@ function get_all_the_users(container)
 		//	1.	Options for the URL
 		//
 		let queries = {
-			page_size: 1000,
+			page_size: 2000,
 			page: "1",
 			order_by: "user_name"
 		}
@@ -63,7 +63,7 @@ function get_all_the_users(container)
 		//	2.	Prepare the request
 		//
 		let option = {
-			url: "https://api.sequr.io/v1/property/" + container.selected_property.id + "/property_user",
+			url: "https://api.sequr.io/v1/customer/" + container.selected_location.customer_uuid + "/user",
 			json: true,
 			qs: queries,
 			headers: {
@@ -73,7 +73,7 @@ function get_all_the_users(container)
 
 		//
 		//  3.	Make the request to get all the user from the selected
-		//  	properties.
+		//  	locations.
 		//
 		request.get(option, function(r_error, response, body) {
 
@@ -127,17 +127,22 @@ function extract_just_the_email(container)
 		//
 		//	2.	Go over the response and get the emails and IDs
 		//
-		container.raw_users.forEach(function(data) {
+		container.raw_users.forEach(function(user) {
 
 			//
 			//	1.	Push a small object with just what we need to our
 			//		temporary array
 			//
-			tmp_users.push({
-				id: data.id,
-				email: data.user.email,
-				name: data.user.name
-			});
+			if(user.email) {
+
+				tmp_users.push({
+					id: user.id,
+					uuid: user.uuid,
+					email: user.email,
+					name: user.name
+				});
+				
+			}
 
 		});
 

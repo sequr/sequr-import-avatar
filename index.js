@@ -6,7 +6,7 @@ let program = require('commander');
 let request = require('request');
 
 let upload = require('./sequr/upload');
-let get_properties = require('./sequr/get_properties');
+let get_locations = require('./sequr/get_locations');
 let get_sequr_users = require('./sequr/get_users');
 
 let bamboohr = require('./bamboohr/index');
@@ -118,29 +118,29 @@ display_the_welcome_message(container)
 	}).then(function(container) {
 
 		//
-		//	Using the Sequr API Key, get the list of properties that the user
+		//	Using the Sequr API Key, get the list of locations that the user
 		//	belongs to
 		//
-		return get_properties(container);
+		return get_locations(container);
 
 	}).then(function(container) {
 
 		//
-		//	Prepare the Properties to be displayed as a menu selection
+		//	Prepare the locations to be displayed as a menu selection
 		//
-		return prepare_the_property_array(container);
+		return prepare_the_location_array(container);
 
 	}).then(function(container) {
 
 		//
-		//	Use the Properties array to make a drop down menu
+		//	Use the locations array to make a drop down menu
 		//
-		return select_property(container);
+		return select_location(container);
 
 	}).then(function(container) {
 
 		//
-		//	Based on the selected property
+		//	Based on the selected location
 		//
 		return get_sequr_users(container);
 
@@ -263,7 +263,7 @@ function display_the_welcome_message(container)
 		//
 		//	2.	The text to be displayed on the screen
 		//
-		let text = "\tStarting Sequr Import";
+		let text = "\tStarting Sequr Import\n\n\tNOTE: Only users with email will import.";
 
 		//
 		//	3.	Draw the text
@@ -399,13 +399,13 @@ function ask_for_sequr_api_key(container)
 }
 
 //
-//	Convert the properties that we received from Sequr in a simple array to
-//	be used to draw the menu for the user to use to select a property.
+//	Convert the locations that we received from Sequr in a simple array to
+//	be used to draw the menu for the user to use to select a location.
 //
-//	This way we can show the user the name of the property and then actually
+//	This way we can show the user the name of the location and then actually
 //	get the ID from his or her selection
 //
-function prepare_the_property_array(container)
+function prepare_the_location_array(container)
 {
 	return new Promise(function(resolve, reject) {
 
@@ -415,9 +415,9 @@ function prepare_the_property_array(container)
 		let tmp_array = [];
 
 		//
-		//	2.	Loop over the properties to just grab the name
+		//	2.	Loop over the locations to just grab the name
 		//
-		container.properties.forEach(function(data) {
+		container.locations.forEach(function(data) {
 
 			//
 			//	1.	Grab just the name
@@ -427,9 +427,9 @@ function prepare_the_property_array(container)
 		})
 
 		//
-		//	3.	Save the Properties for the next promise
+		//	3.	Save the Locations for the next promise
 		//
-		container.items = tmp_array
+		container.items = tmp_array;
 
 		//
 		//	->	Move to the next chain
@@ -440,10 +440,10 @@ function prepare_the_property_array(container)
 }
 
 //
-//	Display a drop down menu with a list of all the Properties for the given
+//	Display a drop down menu with a list of all the Locations for the given
 //	user.
 //
-function select_property(container)
+function select_location(container)
 {
 	return new Promise(function(resolve, reject) {
 
@@ -462,7 +462,7 @@ function select_property(container)
 		//
 		//	2.	Tell the user what we want from hi or her
 		//
-		term.yellow("\tSelect The Property ");
+		term.yellow("\tSelect The Location ");
 
 		term('\n');
 
@@ -476,15 +476,15 @@ function select_property(container)
 			term.yellow("\tLoading...");
 
 			//
-			//	1.	Get the Property name based on the user selection
+			//	1.	Get the Location name based on the user selection
 			//
-			let selected_property = container.properties[res.selectedIndex];
+			const selected_location = container.locations[res.selectedIndex];
 
 			//
 			//	2.	Save the selection for other promises to use. It will
 			//		be used in API calls
 			//
-			container.selected_property = selected_property;
+			container.selected_location = selected_location;
 
 			//
 			//	->	Move to the next chain
@@ -641,11 +641,11 @@ function display_the_sumary(container)
 
 		term("\n\n");
 
-		term.yellow("\tSequr users: " + container.sequr_users_email.length);
+		term.yellow("\tSequr users with email : " + container.sequr_users_email.length);
 
 		term("\n");
 
-		term.yellow("\t" + container.selected_service + " users: " + container.clean_users.length);
+		term.yellow("\t" + container.selected_service + " users with email : " + container.clean_users.length);
 
 		term("\n");
 
