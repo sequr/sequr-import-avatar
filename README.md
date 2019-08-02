@@ -16,6 +16,18 @@ sudo npm install -g @sequr/sequr-import-avatar
 
 Once this part is done, you can run the app by typing: `sequr-avatar`.
 
+# How to uninstall
+
+```
+sudo npm uninstall -g @sequr/sequr-import-avatar
+```
+
+# How to update package to latest version
+
+```
+sudo npm update -g @sequr/sequr-import-avatar
+```
+
 # What else do I need
 
 Before you start using this tool, you'll need to  grab a API Key from your Sequr dashboard - check this [page](https://access.sequr.io/settings/api-token). After that, you'll need to grab the credential from the service provider that you want to import the images from.
