@@ -49,4 +49,4 @@ We hope you'll find this tool useful.
 
 # Contact
 
-If you have any questions, please don't hesitate to send us an email at: support@sequr.io
+If you have any questions, please don't hesitate to send us an email at: acsupport@getgenea.com
