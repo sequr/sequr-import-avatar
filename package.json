@@ -26,6 +26,6 @@
   "dependencies": {
     "commander": "2.11.0",
     "request": "2.81.0",
-    "terminal-kit": "1.13.10"
+    "terminal-kit": "3.0.0"
   }
 }
